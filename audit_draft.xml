@@ -21,7 +21,7 @@
   <?rfc subcompact='no' ?>
 
   <front>
-    <title abbrev="Audit">Audit in OAuth 2.0 enabled environments</title>
+    <title abbrev="Audit">Audit in OAuth 2.0 </title>
 
     <author fullname="Zhanna Tsitkov" initials="Zh" role="editor"
             surname="Tsitkov">
@@ -58,15 +58,16 @@
 	  
 	  <t>The intention of this specification is:
 	    <list style="symbols">
-         <t>to improve audit log processing.  This is achieved by
-  			  introducing an Audit ID that simplifies log querying.</t>
+	         <t>to address the quality of the content of audit logs. This is done by
+        	    identifying the mandatory, recommended and optional auditable
+		    information from the OAuth 2.0  perspective;</t>
 
-         <t>to give a recommendation of what information is
-			  useful/mandatory from the OAuth 2.0  audit perspective;</t>
+    		 <t>to improve audit log processing. This is achieved by introducing an
+                    audit identifier that simplifies log querying;</t>
 			  
 		 <t>to encourage all participants (RS, AS, Client) to store
-			  information that is useful for the audit.</t>
-        </list>
+		    information that is useful for the audit.</t>
+            </list>
 	  </t>
 	  
 	  <t>The goal of this proposal is to provide a high quality feed to
@@ -106,7 +107,10 @@
 				<t> It can be passed to downstream modules.</t>
 				
 			</list>
-		The audit identifier can be an (random) alphanumeric string, or a JSON structure.
+			The audit identifier can be an alphanumeric string, or a JSON
+                        structure.  It can be randomly generated, or constructed out
+                        of some unique parameters, such as components of the tokens,
+                        session ids, etc.
 		</t>
     
 		
@@ -207,16 +211,12 @@
 	if the audit logs are jeopardized, what privacy related information
 	has leaked.</t>
 
-	<t>In some cases it becomes desirable to protect the real identity of
-	the user from the exposure in the audit logs.  It can be governed by
-	policy settings on AS or RS.  The user identities can be completely
-	omitted from the logs and some pseudonyms can be used in lieu of real
-	names.  In this case the AS or RS, respectively, should support some
-	table that matches the RO or RP to their pseudonyms.</t>
+	<t>Does Audit ID introduce any new privacy related threads when
+           compared to “traditional” audit trailing?  As soon as
+           Client does not have an access to User/RS audit logs, the answer is no.
+           TODO. Per RFC 6973.</t>
 
 
-	<t>TODO: Does audit_id introduces any additional privacy risks?
-	Per RFC 6973.</t>
    </section>
 		
 	
