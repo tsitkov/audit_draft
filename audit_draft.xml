@@ -4,7 +4,7 @@
 <!ENTITY RFC3552 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.3552.xml">
 <!ENTITY RFC4627 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.4627.xml">
 ]>
-<rfc category="std" docName="draft-tsitkov-audit-00"
+<rfc category="info" docName="draft-tsitkov-audit-00"
      ipr="trust200902">
   <?xml-stylesheet type='text/xsl' href='rfc2629.xslt' ?>
 
@@ -32,53 +32,63 @@
       </address>
     </author>
 
-    <date day="29" month="September" year="2014" />
+    <date day="14" month="October" year="2014" />
 
     <abstract>
       <t>This specification is an effort to provide guidelines for
-	  implementing the Audit functionality for OAuth 2.0 enabled 
-	  environments.  The data of interest for the OAuth 2.0 audit
-	  includes permissions, scopes, policies and other authorization and
-	  authentication related information.  It can be used by government
-	  agencies and various institutions for fast violation response,
-	  credential revocation, forensic analysis, etc.</t>
+         implementing the Audit functionality for OAuth 2.0 enabled 
+         environments.  The data of interest for the OAuth 2.0 audit includes
+         permissions, scopes, policies and other authorization and
+         authentication related information.  It can be used by user agents and
+         authorization services for fast violation response, credential
+         revocation, or by government agencies and various institutions for
+         forensic analysis.
+      </t>
     </abstract>
   </front>
 
   <middle>
     <section anchor="introduction" title="Introduction">
       <t>This specification is an effort to provide guidelines for
-	  implementing the Audit functionality for OAuth 2.0 
-	  <!-- <xref target="OAuth2"></xref> --> 
-	  enabled environments.  The data of interest for
-	  the OAuth 2.0 audit includes permissions, scopes, policies and other
-	  authorization and authentication related information.  It can be used by
-	  government agencies and various institutions for fast violation response,
-	  credential revocation, forensic analysis, etc.</t>
-	  
-	  <t>The intention of this specification is:
-	    <list style="symbols">
-	         <t>to address the quality of the content of audit logs. This is done by
-        	    identifying the mandatory, recommended and optional auditable
-		    information from the OAuth 2.0  perspective;</t>
+      implementing the Audit functionality for OAuth 2.0 
+      <xref target="OAuth2"></xref>
+      enabled environments. 
+      
+      The data of interest for the OAuth 2.0 audit includes permissions,
+      scopes, policies and other authorization and authentication
+      related information.  It can be used by user agents and authorization
+      services for fast violation response, credential revocation, or by
+      government agencies and various institutions for forensic analysis,
+      and similar purposes.</t>
+      
+      <t>The intention of this specification is:
+       <list style="symbols">
+         <t>to address the quality of the content of audit logs.  This is done
+            by identifying the mandatory, recommended and optional auditable
+            information from the OAuth 2.0 perspective;
+         </t>
 
-    		 <t>to improve audit log processing. This is achieved by introducing an
-                    audit identifier that simplifies log querying;</t>
-			  
-		 <t>to encourage all participants (RS, AS, Client) to store
-		    information that is useful for the audit.</t>
-            </list>
-	  </t>
-	  
-	  <t>The goal of this proposal is to provide a high quality feed to
-	  various audit processing facilities.  Identifying mechanisms of how the
-	  logs are processed is outside the scope of this document.  It can be done
-	  dynamically, and, for example, trigger that some token to be revoked. It can
-	  be done by resource owner's Audit Agent. It can be done off-line when audit
-	  analysis is performed.</t>  
-	</section>
-	
-	<section title="Notational Conventions">
+         <t>to improve audit log processing.  This is achieved by introducing 
+            an audit identifier that simplifies log querying;
+         </t>
+              
+         <t>to encourage all OAuth 2.0 participants to store and protect
+            information that is useful for the audit.
+         </t>
+       </list>
+      </t>
+      
+      <t>The goal of this proposal is to provide a high quality feed to various 
+         audit processing facilities.  Identifying mechanisms of how the logs 
+         are processed is outside the scope of this document.  It can be done 
+         dynamically, and, for example, trigger that tokens to be revoked. It 
+         can be done by resource owner's  Audit Agent. It can be done off-line
+         when audit analysis is performed.  
+      </t>  
+    </section>
+    
+    <section title="Notational Conventions">
+
         <t>The key words 'MUST', 'MUST NOT', 'REQUIRED', 'SHALL', 'SHALL NOT',
         'SHOULD', 'SHOULD NOT', 'RECOMMENDED', 'MAY', and 'OPTIONAL' in this
         document are to be interpreted as described in <xref
@@ -90,136 +100,176 @@
 
     <section anchor="audit_id" title="Audit ID">
 
-	
-		<t>To optimize audit log handling this document introduces an audit ID
-		   (audit_id) an identifier with the following properties 
-			<list style="symbols">
-				<t> It is unique and stays unchanged for a given OAuth 2.0
-				    end-to-end communication;</t>
-					
-				<t> It is generated as part of OAuth 2.0 processing;</t>
-				
-				<t> It is protected against data tampering; </t>
-				
-				<t> It is available to all OAuth 2.0 participants to be recorded
-				    for their audit needs;</t>
-					
-				<t> It can be passed to downstream modules.</t>
-				
-			</list>
-			The audit identifier can be an alphanumeric string, or a JSON
-                        structure.  It can be randomly generated, or constructed out
-                        of some unique parameters, such as components of the tokens,
-                        session ids, etc.
-		</t>
     
-		
-		<t>The uniqueness of the audit_id is important especially in the cases
-		when audit logs are processed dynamically.  Since randomizers on Clients
-		or RSs are commonly weaker and less collision-resistant when compared
-		to AS randomizers, in most environments, it should be the
-		responsibility of AS to generate a high quality strong audit id.
-		However, it should be allowed for the Client or RS to have their own
-		audit ids for internal bookkeeping.  These identifiers can be passed
-		to the authorization server as part of the initial request and AS
-		should include it in the reply messages together with the strong
-		AS-selected audit id.</t>
+        <t>To optimize audit log handling this document introduces an Audit ID
+           (audit_id) an identifier with the following properties:
 
-		<t>AS may adopt any audit identifier coming from the outside of AS as
-		a strong audit ID if it believes that it is a high quality
-		identifier.</t>
+            <list style="symbols">
+            
+                <t> It is unique and stays unchanged for a given OAuth 2.0
+                    end-to-end communication;
+                </t>    
+                                
+                <t> It is generated as part of OAuth 2.0 processing;</t>    
+                            
+                <t> It is protected against data tampering; </t>    
+                            
+                <t> It is available to all OAuth 2.0 participants to be recorded
+                    for their audit needs;</t>                    
+                    
+                <t> It can be passed to downstream modules.</t>        
+                        
+            </list>
+        </t>
+    
+        <t>The audit_id becomes useful when, for example, one of the OAuth 2.0
+           participants (most likely resource server or authorization
+           server) suspects some malicious activity.  It can then request the
+           other participants to provide information from their audit logs that
+           corresponds to the particular audit_id and, based on the acquired
+           information, perform further analysis of the suspected attack.
+           Alternatively, suspecting party can issue warning to the other
+           participants about the suspicious activity associated with the
+           particular audit_id.  
 
-		<t>It is desirable for RS, Client and AS to record audit related
-		information for all communications, at least for the mandatory set of
-		parameters.  It makes analysis of audit trails more effective.  For
-		example, if one of the participants suspects some malicious activity,
-		it can request the other participants to provide information from their
-		audit logs for some particular audit_id.  It also makes it possible
-		to find out who was responsible for the violation, whether it was due
-		to the wrongful resource registration, misinterpreting the policies,
-		ignoring users consent etc.</t>
+           In addition, in more static use-case, such as forensic analysis, the 
+           audit identifier makes it possible and simple to find out who was
+           responsible for the violation, whether it was due to the wrongful 
+           resource registration, misinterpreting the policies, etc.
+        </t>
+        
+        <t>The audit identifier can be an alphanumeric string, or a JSON structure.  
+           It can be randomly generated, or constructed out of some unique
+           parameters, such as components of the tokens, session ids, timestamps.
+        </t>
 
-		<t>The audit ID can be passed to the downstream modules, such as UMA
-		AS.  The latter can use it for its own audit needs.</t>
-	</section>
-	
-    <section anchor="params" title="Audit log parameters">	
-	
+        <t>The uniqueness of the audit_id is important especially in the cases 
+           when audit logs are processed dynamically.  Since randomizers on 
+           Clients or resource server&rsquo;s (RS) are commonly weaker and less
+           collision-resistant when compared to authorization server&rsquo;s
+           (AS) randomizers, in most environments, it should be the
+           responsibility of AS to generate a high quality &ldquo;strong&rdquo;
+           audit id.  However, it should be allowed for the client or resource
+           server to have their own audit id&rsquo;s for internal bookkeeping.
+           These identifiers can be passed to the authorization server as part
+           of the initial request and AS should include it in the reply messages
+           together with the &ldquo;strong&rdquo; AS-selected audit id. 
+        </t>
+        
+        <t>Authorization server  may adopt any audit identifier coming from the
+           outside of AS as a &ldquo;strong&rdquo; audit ID if it believes that
+           it is a high quality identifier.
+        </t>
+        
+        <t>It is desirable for resource server, client and authorization
+           server to record audit related information for all communications,
+           at least for the mandatory set of parameters.  It makes analysis
+           of audit trails more effective.  
+        </t>
 
-	<t>It is considered a good practice to keep the audit log concise.
-	Overloading logs with unnecessary information comes with the burden of
-	extra storage allocation and protection, and less effective information
-	processing (both time-wise and resource-wise).  </t>
-	
-	<t>The following are the recommended parameters that, when applicable,
-	should be included in the OAuth 2.0 audit logs for AS, RS and Client.
-	All security sensitive information should be stripped and not logged.
-	The implementers have the opportunity to customize audit logs by
-	extending auditable parameters and events.  </t>
+         <t>The audit ID can be passed to the downstream modules, such as OIDC 
+            identity provider.  The latter can use it for its own audit needs.  
+         </t>
+    </section>
+    
+    <section anchor="params" title="Audit log parameters">    
+    
+    <t>It is considered a good practice to keep the audit log concise. 
+       Overloading logs with unnecessary information comes with the 
+       burden of extra storage allocation and protection, and less 
+       effective information processing (both time-wise and resource-wise).
+    </t>
+    
+    <t>The following are the recommended parameters that, when applicable, 
+       should be included in the OAuth 2.0 audit logs for AS, RS and client.
+       All security sensitive information should be stripped and not logged.
+       The implementers have the opportunity to customize audit logs by
+       extending auditable parameters and events.
 
-	<t>audit_id </t>
-	<t>A non-modifiable identifier that is used to track all
-	participants on all stages of the OAuth 2.0 exchange;</t>
-	
-	<t>event_type</t>
-	<t>A type of event. For example,  permissions problem;</t>
+       <list hangIndent="6" style="hanging">
+         <t hangText="audit_id"><vspace /> A non-modifiable identifier that 
+            is used to track all participants on all stages of the OAuth 2.0
+            communication; 
+         </t>
+        
+         <t hangText="event_type"><vspace /> A type of event. For example,  
+           &ldquo;permissions problem&rdquo;;
+         </t>
+        
+         <t hangText="event_category "><vspace /> Type of action performed when 
+            audit is generated. For example, &ldquo;resource server
+            processing&ldquo;;
+         </t>
+        
+         <t hangText="timestamp"><vspace /> A timestamp when event occurred;
+         </t>
 
-	<t>event_category</t>
-	<t>Type of action performed when audit is generated. For example, RS processing;</t>
+         <t hangText="event_outcome"><vspace /> Indicates whether the event 
+            is reported on success or failure;
+         </t>
 
-	<t>timestamp</t>
-	<t>A timestamp when event was logged;</t>
-	
+         <t hangText="endpoint_uri"><vspace /> Endpoint URI;
+         </t>
+        
+         <t hangText="source"><vspace /> Code specifying the type of source 
+            where event originated;
+         </t>
+        
+         <t hangText="permissions"><vspace /> Requested, granted permissions   
+            including resource id, lifetime, scopes, and other access attributes;    
+         </t>
 
-	<t>event_outcome</t>
-	<t>Indicates whether the event is reported on success or failure;</t>
-	
+         <t hangText="token_status"><vspace /> Full token status, including
+            validity periods, corresponding refresh tokens, etc
+         </t>
+        
+         <t hangText="policies"><vspace /> Policies.
+         </t>
+        
+       </list>
+    </t>
+        
+    <t>The content of the audit logs can be configurable.  If, for example, 
+       the performance or storage are a concern, the administrator may choose 
+       to log only basic mandatory information. However, if this is not the case, 
+       or under violation alert, more detailed audit information may be useful. 
+       In this case the administrator may switch the audit configuration from 
+       the basic level to the detailed.  There should be well defined mandatory 
+       set of parameters. 
+    </t>
+        
+    </section>
 
-	<t>endpoint_uri</t>
-	<t>Registration, token, etc URI. </t>
+    <section anchor="event_selection" title="Event selection">
 
-	<t>source</t>
-	<t>Code specifying the type of source where event originated;</t>
+    <t>In general, all AS-RS , Client-RS, Client-AS interactions, successful 
+       or not, should be recorded in the audit log files. This includes 
+       permission requests, token issuance, token introspection, etc.
+    </t>
 
-	<t>permissions</t>
-	<t>Requested, granted, permissions including resource id, lifetime, scopes,
-	and other security insensitive access attributes;</t>
+    </section>
+   
+    <section anchor="privacy" title="Audit vs privacy">
 
-	<t>token_status</t>
-	<t>Full token status, including validity periods, corresponding refresh tokens, etc.</t>
+    <t>Privacy and auditing are closely related.  As it has been discussed in 
+       <xref target="Privacy-Considerations"></xref>, audit trail can help to
+       identify the misuse of information, such as unauthorized secondary use
+       of data.  On the other hand, stored audit logs may be compromised, data
+       can be collected and analyzed.  To address the privacy risks one should
+       make sure that the audit system is simple, transparent, and unambiguous.
+       Generally, audit designers should minimize the exposure of privacy
+       related information in the logs. Also, it should always be clear, if
+       the audit logs are jeopardized, what privacy related information has
+       leaked.
+    </t>
 
-
-	<t>The content of the audit logs can be configurable.  If, for example,
-	the performance or storage are a concern, the administrator may choose
-	to log only basic mandatory information. However, if this is not the case, or
-	under violation alert, more detailed audit information may be useful. In this
-	case the administrator may switch the audit configuration from the basic level
-	to the detailed.  There should be well defined mandatory set of parameters.</t>
-   </section>
-	<section anchor="selection" title="Event selection">
-
-	<t>In general, all AS-RS , Client-RS, Client-AS interactions, successful
-	or not, should be recorded in the audit log files. This includes
-	permission requests, token issuance, token introspection, etc.</t>
-   </section>
-	<section anchor="privacy" title="Audit vs privacy">
-
-	<t>Privacy risk is a major concern for audit.  To address it one should
-	make sure that the audit system is simple, transparent, and unambiguous.
-	Generally, audit designers should minimize the exposure of privacy
-	related information in the logs. Also, it should always be clear,
-	if the audit logs are jeopardized, what privacy related information
-	has leaked.</t>
-
-	<t>Does Audit ID introduce any new privacy related threads when
-           compared to “traditional” audit trailing?  As soon as
-           Client does not have an access to User/RS audit logs, the answer is no.
-           TODO. Per RFC 6973.</t>
-
-
-   </section>
-		
-	
+    <t>One should notice, that introducing audit_id into audit log in OAuth 2.0 
+       enabled environments does not add any privacy related concerns.
+    </t>
+    
+    </section>
+        
+    
     <section anchor="IANA" title="IANA Considerations">
       <t>This document makes no request of IANA.</t>
     </section>
@@ -248,8 +298,18 @@
         </front>
       </reference>
 
-    
+      <reference anchor="Privacy-Considerations" target="http://tools.ietf.org/html/rfc6973">
+        <front>
+          <title>Privacy Considerations for Internet Protocols</title>
 
+          <author initials="A." surname="Cooper">
+            <organization>IETF</organization>
+          </author>
+
+          <date day="" month="July" year="2013" />
+        </front>
+      </reference>
+      
     </references>
 
     </back>
